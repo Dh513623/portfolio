@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const API = axios.create({
- // baseURL: 'https://portfolio-8ncv.onrender.com/api',
- baseURL: '/api',
+  baseURL: 'https://portfolio-8ncv.onrender.com/api',
+// baseURL: '/api',
 });
 
 API.interceptors.request.use((config) => {

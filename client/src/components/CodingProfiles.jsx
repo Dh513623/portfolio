@@ -155,12 +155,7 @@ export default function CodingProfiles() {
                                             <h3 className="text-3xl font-bold text-white mb-2">
                                                 {selectedProfile.platform}
                                             </h3>
-                                            /* {selectedProfile.profileLink && (
-                                                <a href={selectedProfile.profileLink} target="_blank" rel="noreferrer"
-                                                    className="inline-flex items-center gap-2 text-sm text-primary-light hover:text-white transition-colors">
-                                                    View Full Profile <FiExternalLink size={16} />
-                                                </a>
-                                            )} */
+                                            
                                         </div>
                                     </div>
 

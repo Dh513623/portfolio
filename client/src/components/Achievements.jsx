@@ -1,37 +1,19 @@
 import { useEffect, useState } from 'react';
 import { FiExternalLink } from 'react-icons/fi';
-import { FaCode, FaTrophy, FaMedal } from 'react-icons/fa';
+import { FaTrophy } from 'react-icons/fa';
 import API from '../api/axios';
-
-const platformIcons = {
-    'LeetCode': '🟡',
-    'HackerRank': '🟢',
-    'CodeChef': '🟤',
-    'Codeforces': '🔵',
-    'GeeksforGeeks': '🟩',
-};
-
-const platformColors = {
-    'LeetCode': 'from-amber-500/15 to-yellow-500/15 border-amber-500/20',
-    'HackerRank': 'from-green-500/15 to-emerald-500/15 border-green-500/20',
-    'CodeChef': 'from-orange-500/15 to-amber-500/15 border-orange-500/20',
-    'Codeforces': 'from-blue-500/15 to-cyan-500/15 border-blue-500/20',
-    'GeeksforGeeks': 'from-green-600/15 to-green-400/15 border-green-600/20',
-};
 
 const isPdf = (url = '') => /\.pdf$/i.test(url);
 
 export default function Achievements() {
     const [certificates, setCertificates] = useState([]);
-    const [codingProfiles, setCodingProfiles] = useState([]);
 
     useEffect(() => {
         API.get('/achievements/certificates').then(r => setCertificates(r.data)).catch(console.error);
-        API.get('/achievements/coding-profiles').then(r => setCodingProfiles(r.data)).catch(console.error);
     }, []);
 
     return (
-        <section id="achievements" className="py-20 relative overflow-hidden">
+        <section className="py-20 relative overflow-hidden">
             <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.18),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(168,85,247,0.18),_transparent_35%)]" />
                 <div className="absolute left-[-8%] top-10 h-48 w-48 rounded-full bg-cyan-400/10 blur-3xl animate-pulse" />
@@ -42,65 +24,11 @@ export default function Achievements() {
                 <div className="text-center mb-12">
                     <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-text-muted backdrop-blur-sm mb-4">
                         <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-ping" />
-                        Milestones & credentials
+                        Certifications & credentials
                     </div>
-                    <h2 className="section-title transform transition-all duration-500 hover:scale-[1.01]">My <span className="gradient-text">Achievements</span></h2>
-                    <p className="section-subtitle max-w-2xl mx-auto">A showcase of certifications, coding milestones, and continuous growth.</p>
+                    <h2 className="section-title transform transition-all duration-500 hover:scale-[1.01]">My <span className="gradient-text">Certifications</span></h2>
+                    <p className="section-subtitle max-w-2xl mx-auto">A showcase of professional certifications and credentials.</p>
                 </div>
-
-                {/* Coding Profiles */}
-                {codingProfiles.length > 0 && (
-                    <div className="mb-16">
-                        <h3 className="text-xl font-bold text-accent mb-8 flex items-center gap-2">
-                            <FaCode /> Coding Profiles
-                        </h3>
-                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {codingProfiles.map((profile, idx) => (
-                                <div
-                                    key={profile._id}
-                                    className={`card group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br ${platformColors[profile.platform] || 'from-primary/10 to-secondary/10 border-primary/20'} p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(0,0,0,0.35)] hover:brightness-110 hover:saturate-125 fade-in`}
-                                    style={{ animationDelay: `${idx * 0.1}s` }}
-                                >
-                                    <div className="absolute inset-0 bg-gradient-to-br from-white/15 via-transparent to-cyan-400/10 opacity-0 transition-all duration-500 group-hover:opacity-100 group-hover:scale-105" />
-                                    <div className="relative z-10 flex items-center gap-3 mb-4">
-                                        <span className="text-2xl">{platformIcons[profile.platform] || '💻'}</span>
-                                        <h4 className="text-lg font-bold text-white">{profile.platform}</h4>
-                                    </div>
-
-                                    <div className="relative z-10 space-y-3 mb-4">
-                                        {profile.problemsSolved > 0 && (
-                                            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-                                                <span className="text-sm text-text-muted flex items-center gap-1.5"><FaTrophy className="text-amber-400" /> Problems Solved</span>
-                                                <span className="text-lg font-black gradient-text">{profile.problemsSolved}</span>
-                                            </div>
-                                        )}
-                                        {profile.ranking && (
-                                            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-                                                <span className="text-sm text-text-muted flex items-center gap-1.5"><FaMedal className="text-secondary-light" /> Ranking</span>
-                                                <span className="text-sm font-bold text-white">{profile.ranking}</span>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {profile.badges?.length > 0 && (
-                                        <div className="relative z-10 flex flex-wrap gap-1.5 mb-4">
-                                            {profile.badges.map((badge, i) => (
-                                                <span key={i} className="tag text-xs">{badge}</span>
-                                            ))}
-                                        </div>
-                                    )}
-
-                                    {profile.profileLink && (
-                                        <a href={profile.profileLink} target="_blank" rel="noreferrer"
-                                            className="relative z-10 flex items-center gap-1.5 text-sm text-text-muted hover:text-white transition-colors mt-auto">
-                                            <FiExternalLink size={14} /> View Profile
-                                        </a>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
 
                 {/* Certificates */}
                 {certificates.length > 0 && (

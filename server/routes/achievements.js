@@ -76,8 +76,15 @@ router.post('/certificates/:id/upload', auth, upload.single('image'), async (req
     if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
     const cert = await Certificate.findById(req.params.id);
     if (!cert) return res.status(404).json({ message: 'Not found' });
-    cert.image = `/uploads/${req.file.filename}`;
+    
+    const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+      resource_type: 'auto',
+      folder: 'achievement_certificates',
+    });
+    
+    cert.image = uploadResult.secure_url;
     await cert.save();
+    fs.unlink(req.file.path, () => {});
     res.json(cert);
   } catch (error) {
     res.status(500).json({ message: error.message });

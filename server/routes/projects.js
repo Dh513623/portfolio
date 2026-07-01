@@ -1,8 +1,16 @@
 const express = require('express');
+const fs = require('fs');
+const { v2: cloudinary } = require('cloudinary');
 const Project = require('../models/Project');
 const auth = require('../middleware/auth');
 const upload = require('../middleware/upload');
 const router = express.Router();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
 
 // GET /api/projects - Public
 router.get('/', async (req, res) => {
@@ -64,8 +72,15 @@ router.post('/:id/logo', auth, upload.single('logo'), async (req, res) => {
     if (!req.file) return res.status(400).json({ message: 'No logo uploaded' });
     const project = await Project.findById(req.params.id);
     if (!project) return res.status(404).json({ message: 'Project not found' });
-    project.logo = `/uploads/${req.file.filename}`;
+    
+    const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+      resource_type: 'auto',
+      folder: 'project_logos',
+    });
+    
+    project.logo = uploadResult.secure_url;
     await project.save();
+    fs.unlink(req.file.path, () => {});
     res.json(project);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -78,8 +93,15 @@ router.post('/:id/screenshot', auth, upload.single('screenshot'), async (req, re
     if (!req.file) return res.status(400).json({ message: 'No screenshot uploaded' });
     const project = await Project.findById(req.params.id);
     if (!project) return res.status(404).json({ message: 'Project not found' });
-    project.screenshot = `/uploads/${req.file.filename}`;
+    
+    const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+      resource_type: 'auto',
+      folder: 'project_screenshots',
+    });
+    
+    project.screenshot = uploadResult.secure_url;
     await project.save();
+    fs.unlink(req.file.path, () => {});
     res.json(project);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -92,8 +114,15 @@ router.post('/:id/upload', auth, upload.single('image'), async (req, res) => {
     if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
     const project = await Project.findById(req.params.id);
     if (!project) return res.status(404).json({ message: 'Project not found' });
-    project.images.push(`/uploads/${req.file.filename}`);
+    
+    const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+      resource_type: 'auto',
+      folder: 'project_images',
+    });
+    
+    project.images.push(uploadResult.secure_url);
     await project.save();
+    fs.unlink(req.file.path, () => {});
     res.json(project);
   } catch (error) {
     res.status(500).json({ message: error.message });

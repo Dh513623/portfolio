@@ -8,7 +8,7 @@ const navLinks = [
     { name: 'Expertise', href: '#skills' },
     { name: 'Work Showcase', href: '#projects' },
     { name: 'Growth Path', href: '#experience' },
-    { name: 'Milestones', href: '#achievements' },
+    { name: 'Milestones', href: '#milestones' },
     { name: 'Connect', href: '#contact' },
 ];
 

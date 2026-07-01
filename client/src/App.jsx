@@ -6,6 +6,7 @@ import About from './components/About';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Experience from './components/Experience';
+import CodingProfiles from './components/CodingProfiles';
 import Achievements from './components/Achievements';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
@@ -22,6 +23,7 @@ function Portfolio() {
       <Skills />
       <Projects />
       <Experience />
+      <CodingProfiles />
       <Achievements />
       <Contact />
       <Footer />
